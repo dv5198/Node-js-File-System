@@ -1,13 +1,13 @@
 
 var fs = require('fs');
-const { readFile } = require('fs/promises');
-const { exit } = require('process');
 const readline=require('readline');
 const r1=readline.createInterface({
     input:process.stdin,
     output:process.stdout,
 });
-var directoryname;
+var directoryname="";
+var fname="";
+var content="";
 var menu=()=>{
     console.log("1.Create a Directory");
     console.log("2.Remove a Directory");
@@ -70,16 +70,19 @@ var deletedir=()=>{
 };
 //Wrtitng data to the File
 var write=()=>{
-    r1.question("Enter File Name",(ans)=>{
-        var filename=ans;
-        r1.question("File Content",(ans1)=>{
+    r1.question("Enter File Name: ",(ans)=>{
+        var fname=ans+".txt";
+        r1.question("File Content: ",(ans1)=>{
             content=ans1;
+            console.log(fname+" "+content);
+            filecreation();
         });
     });
-    filecreation();
+
+
 };
 var filecreation=()=>{
-    fs.writeFile(filename,content,(err)=>{
+    fs.writeFile(fname,content,(err)=>{
         if(err) {
             console.log(err);
         }else{
@@ -91,14 +94,17 @@ var filecreation=()=>{
 var read=()=>{
     r1.question("Enter File Name",(ans)=>{
         file=ans+".txt";
+        read_File();
     }); 
-    read_File();
+    
 };
 var read_File=()=>{
-    fs.readFile(file, function(err, data) {
-        res.writeHead(200, {'Content-Type': 'text/html'});
-        res.write(data);
-        return res.end();
+    fs.readFile(file,"utf-8", function(err, data) {
+       if(err){
+           console.log(err);
+       }else{
+           console.log(data);
+       }
       });
 };
 //Updating a File
@@ -107,15 +113,18 @@ var update=()=>{
         var filename=ans;
         r1.question("File Content",(ans1)=>{
             content=ans1;
+            update_file();
         });
     });
-    update_file();
 
 };
 var update_file=()=>{
     fs.appendFile(filename, content, function (err) {
-        if (err) throw err;
-        console.log('Updated!');
+        if (err){
+            console.log(err);
+        }else{
+            console.log('Updated!');
+        }
       });
 }
 
